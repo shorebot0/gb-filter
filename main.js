@@ -2,7 +2,7 @@
 // メイン処理
 // ------------------------------------------------------------------------------------------------
 
-// VER CHECK 22MAY2026.1635
+// VER CHECK 22MAY2026.1640
 
 // -------------------------------------------------------------------------------------------
 // グローバルな変数
@@ -262,17 +262,23 @@ onload = function()
                 }
                 lines.push(currentLine);
 
-                // === MODIFIED SECTION: Centering Text Vertically ===
-                const lineCount = Math.min(lines.length, 2);
-                const lineSpacing = 1.4;
-                const totalTextHeight = lineCount * fontSize * lineSpacing;
-                const centeredYStart = (boxY + (boxHeight / 2)) - (totalTextHeight / 2);
+                // === FIXED POSITIONING: Upper and Lower Fixed Text Slots ===
+                textCtx.textBaseline = "top";
+                
+                // Calculate exact baseline tracking positions inside the dialogue window
+                const paddingOffset = Math.floor(boxHeight * 0.18); 
+                const lineGapDistance = Math.floor(boxHeight * 0.24);
 
-                textCtx.textBaseline = "middle";
+                const upperLineY = boxY + paddingOffset;
+                const lowerLineY = upperLineY + fontSize + lineGapDistance;
 
-                for (let j = 0; j < lineCount; j++) {
-                    const currentLineY = centeredYStart + (j * fontSize * lineSpacing) + (fontSize / 2);
-                    textCtx.fillText(lines[j].trim(), boxX + 14, currentLineY);
+                // Render Upper Line
+                if (lines[0]) {
+                    textCtx.fillText(lines[0].trim(), boxX + 14, upperLineY);
+                }
+                // Render Lower Line
+                if (lines[1]) {
+                    textCtx.fillText(lines[1].trim(), boxX + 14, lowerLineY);
                 }
             }
         }
